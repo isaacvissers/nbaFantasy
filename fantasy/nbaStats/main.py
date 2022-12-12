@@ -10,7 +10,7 @@ df.drop('is_active', axis=1, inplace=True)
 # df.to_excel("players.xlsx")
 
 # print(df["full_name"][df.index][22])
-writer = pd.ExcelWriter('nbaStats/fullSeason.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter('fullSeason.xlsx', engine='xlsxwriter')
 count = 0
 names = []
 for index in df.index:
@@ -26,7 +26,7 @@ for index in df.index:
     df1.to_excel(writer, sheet_name=df["full_name"][df.index][index].strip())
 
     count += 1
-    if count >= 10:
+    if count >= 5:
         writer.close()
         exit()
 
