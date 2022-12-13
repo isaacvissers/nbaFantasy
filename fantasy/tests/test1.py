@@ -7,8 +7,6 @@ import pandas as pd
 import datetime
 player_dict = players.get_players()
 
-# Use ternary operator or write function 
-# Names are case sensitive
 
 def get_player_id(fullName):
     player_dict = players.get_players()
@@ -18,8 +16,11 @@ def get_player_id(fullName):
 
 def get_player_gamelog(id, season='2022'):
     gamelog = playergamelog.PlayerGameLog(player_id=id, season = season)
-    dfgamelog = gamelog.get_data_frames()
-    return(dfgamelog[0])
+    df = gamelog.get_data_frames()
+    df1 = df[0]
+    df1.drop('SEASON_ID', axis=1, inplace=True)
+    df1.drop('VIDEO_AVAILABLE', axis=1, inplace=True)
+    return(df1)
 
 def get_team_id(fullName):
     team_dict = teams.get_teams()
@@ -35,14 +36,10 @@ def get_dates():
 def get_gamelog(date, season='2022'):
     gamelog = leaguegamelog.LeagueGameLog(season=season)
     df = pd.DataFrame((gamelog.get_data_frames())[0])
+    df.drop('SEASON_ID', axis=1, inplace=True)
+    df.drop('VIDEO_AVAILABLE', axis=1, inplace=True)
     dfdate = df[df["GAME_DATE"] == str(date)]
     return(dfdate)
-
-# def get_allplayers():
-#     df = pd.DataFrame(players.get_players())
-#     df.drop(df[(df['is_active'] == False)].index, inplace=True)
-#     df.drop('is_active', axis=1, inplace=True)
-#     return(df)
 
 def get_roster(team_id, season='2022'):
     df = commonteamroster.CommonTeamRoster(season = season, team_id = team_id).get_data_frames()
@@ -51,10 +48,30 @@ def get_roster(team_id, season='2022'):
     for i in range(len(df)):
         rosterDict[df["PLAYER"][i]] = df["PLAYER_ID"][i]
     return(rosterDict)
+
+def excel_write(df, filename, sheetname=''):
+    writer = pd.ExcelWriter(filename+'.xlsx', engine='xlsxwriter')
+    if sheetname != '':
+        df.to_excel(writer, sheet_name = sheetname)
+        writer.save()
+        writer.close()
+    else:
+        df.to_excel(writer)
+        writer.save()
+        writer.close()
     
 
 if __name__ == "__main__":
-    roster = get_roster(get_team_id('Toronto Raptors'))
-    for name, playerid in roster.items():
-        print(name)
-        print(get_player_gamelog(playerid))
+    todayGames = get_gamelog(get_dates()[1])
+    for teamid in todayGames["TEAM_ID"]:
+        roster = get_roster(teamid)
+        for name, playerid in roster.items():
+            print(name)
+            df = get_player_gamelog(playerid)
+            df1 = df[df['GAME_DATE']==get_dates()[1]]
+            print(df1)
+        exit()
+    # roster = get_roster(get_team_id('Toronto Raptors'))
+    # for name, playerid in roster.items():
+    #     print(name)
+    #     print(get_player_gamelog(playerid))
