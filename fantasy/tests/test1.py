@@ -62,9 +62,11 @@ def excel_write(df, filename, sheetname=''):
     
 
 if __name__ == "__main__":
-    todayGames = get_gamelog(get_dates()[1])
-    for teamid in todayGames["TEAM_ID"]:
+    todaysGames = get_gamelog(get_dates()[1])
+    print(todaysGames)
+    for teamid in todaysGames["TEAM_ID"]:
         roster = get_roster(teamid)
+        print(roster)
         for name, playerid in roster.items():
             print(name)
             df = get_player_gamelog(playerid)
