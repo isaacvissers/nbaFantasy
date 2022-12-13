@@ -62,17 +62,20 @@ def excel_write(df, filename, sheetname=''):
     
 
 if __name__ == "__main__":
-    todaysGames = get_gamelog(get_dates()[1])
+    today, yesterday = get_dates()
+    todaysGames = get_gamelog(yesterday)
     print(todaysGames)
     for teamid in todaysGames["TEAM_ID"]:
         roster = get_roster(teamid)
-        print(roster)
         for name, playerid in roster.items():
             print(name)
             df = get_player_gamelog(playerid)
-            df1 = df[df['GAME_DATE']==get_dates()[1]]
-            print(df1)
-        exit()
+            print(df)
+            exit()
+            if yesterday in df["GAME_DATE"]:
+                df1 = df[df['GAME_DATE'] == yesterday]
+                print(df1)
+                exit()
     # roster = get_roster(get_team_id('Toronto Raptors'))
     # for name, playerid in roster.items():
     #     print(name)
