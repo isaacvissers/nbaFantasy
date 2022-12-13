@@ -4,7 +4,6 @@ import pandas as pd
 playerDict = players.get_players()
 # print(playerDict)
 df = pd.DataFrame(playerDict)
-rm = []
 df.drop(df[(df['is_active'] == False)].index, inplace=True)
 df.drop('is_active', axis=1, inplace=True)
 # df.to_excel("players.xlsx")
