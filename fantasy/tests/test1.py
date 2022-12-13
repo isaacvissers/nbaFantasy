@@ -71,9 +71,10 @@ if __name__ == "__main__":
             print(name)
             df = get_player_gamelog(playerid)
             print(df)
-            exit()
-            if yesterday in df["GAME_DATE"]:
-                df1 = df[df['GAME_DATE'] == yesterday]
+            print(list(df["GAME_DATE"]))
+            yesterdayString = yesterday.strftime('%b') + ' ' +  str(yesterday.day) + ', ' + str(yesterday.year)
+            if yesterdayString in df["GAME_DATE"]:
+                df1 = df[df['GAME_DATE'] == yesterdayString]
                 print(df1)
                 exit()
     # roster = get_roster(get_team_id('Toronto Raptors'))
