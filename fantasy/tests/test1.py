@@ -5,7 +5,6 @@ from nba_api.stats.static import teams
 from nba_api.stats.endpoints import commonteamroster
 import pandas as pd
 import datetime
-player_dict = players.get_players()
 
 
 def get_player_id(fullName):
@@ -49,6 +48,10 @@ def get_roster(team_id, season='2022'):
         rosterDict[df["PLAYER"][i]] = df["PLAYER_ID"][i]
     return(rosterDict)
 
+def calculate_fantasy_points(df, row=0):
+    fantasyPts = df['PTS'][row] + df['AST'][row]*1.5 + df['REB'][row]*1.2 + df['STL'][row]*2 + df['BLK'][row]*2 + df['FG3M'][row]*0.5 - df['TOV'][row]
+    return(fantasyPts)
+
 def excel_write(df, filename, sheetname=''):
     writer = pd.ExcelWriter(filename+'.xlsx', engine='xlsxwriter')
     if sheetname != '':
@@ -59,7 +62,14 @@ def excel_write(df, filename, sheetname=''):
         df.to_excel(writer)
         writer.save()
         writer.close()
-    
+        
+def add_fantasy_row(df):
+    fpts = []
+    for i in range(len(df)):
+        fpts.append(calculate_fantasy_points(df, i))
+    df["FPTS"] = fpts
+    return(df)
+        
 
 if __name__ == "__main__":
     today, yesterday = get_dates()
@@ -71,13 +81,14 @@ if __name__ == "__main__":
             print(name)
             df = get_player_gamelog(playerid)
             print(df)
-            print(list(df["GAME_DATE"]))
-            yesterdayString = yesterday.strftime('%b') + ' ' +  str(yesterday.day) + ', ' + str(yesterday.year)
-            if yesterdayString in df["GAME_DATE"]:
-                df1 = df[df['GAME_DATE'] == yesterdayString]
-                print(df1)
-                exit()
-    # roster = get_roster(get_team_id('Toronto Raptors'))
-    # for name, playerid in roster.items():
-    #     print(name)
-    #     print(get_player_gamelog(playerid))
+            add_fantasy_row(df)
+            print(df)
+            quit()
+            # yesterdayString = yesterday.strftime('%b').upper() + ' ' +  str(yesterday.day) + ', ' + str(yesterday.year)
+            # yesterdayStats = df[df["GAME_DATE"] == yesterdayString]
+            # # exit()
+            # if df["GAME_DATE"][0] == yesterdayString:
+            #     df1 = df[df['GAME_DATE'] == str(yesterdayString)]
+            #     print(calculate_fantasy_points(df1))
+            #     print(df1)
+            #     exit()
