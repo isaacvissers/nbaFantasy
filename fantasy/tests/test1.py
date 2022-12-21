@@ -121,6 +121,28 @@ class Team():
     
     def print_results(self):
         """Prints teams results for today compared with the expected(average)"""
+        print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('NAME', 'TODAY', 'AVEREAGE', 'DIFFERENCE'))
+        total = 0
+        totalav = 0
+        totaldiff = 0
+        for name in myTeam.roster:
+            today = self.fptsatdate[name]
+            average = self.av_fpoints[name]
+            if today != 'DNP':
+                difference = today-average
+                difference = round(difference, 2)
+                total += today
+                totalav += average
+                totaldiff += difference
+                if difference > 0:
+                    difference = '+' + str(difference)
+            else:
+                difference = '-'
+            print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format(name, today, average, difference))
+        total = round(total,1)
+        totalav = round(totalav,2)
+        totaldiff = round(totaldiff,2)
+        print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('TOTALS', total, totalav, totaldiff))
 
         
         
@@ -147,7 +169,7 @@ if __name__ == "__main__":
     myTeam = Team(myTeamRoster, yesterdayString)
 
     myTeam.printfn()
-    
+    myTeam.print_results()
     
     
     # # Need to add 
