@@ -55,10 +55,6 @@ def get_roster(team_id='', teamName='', season='2022'):
         rosterDict[df["PLAYER"][i]] = df["PLAYER_ID"][i]
     return(rosterDict)
 
-def calculate_fantasy_points(df, row=0):
-    fantasyPts = df['PTS'][row] + df['AST'][row]*1.5 + df['REB'][row]*1.2 + df['STL'][row]*2 + df['BLK'][row]*2 + df['FG3M'][row]*0.5 - df['TOV'][row]
-    return(fantasyPts)
-
 def excel_write(df, filename, sheetname=''):
     writer = pd.ExcelWriter(filename+'.xlsx', engine='xlsxwriter')
     if sheetname != '':
@@ -100,7 +96,7 @@ class Team():
     def add_fantasy_row(self,df):
         fpts = []
         for i in range(len(df)):
-            fpts.append(calculate_fantasy_points(df, i))
+            fpts.append(self.calculate_fantasy_points(df, i))
         df["FPTS"] = fpts
         return(df)
     
@@ -142,10 +138,18 @@ class Team():
         total = round(total,1)
         totalav = round(totalav,2)
         totaldiff = round(totaldiff,2)
+        if totaldiff > 0:
+                    totaldiff = '+' + str(totaldiff)
         print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('TOTALS', total, totalav, totaldiff))
+        
+    def calculate_fantasy_points(self, df, row=0):
+        fantasyPts = df['PTS'][row] + df['AST'][row]*1.5 + df['REB'][row]*1.2 + df['STL'][row]*2 + df['BLK'][row]*2 + df['FG3M'][row]*0.5 - df['TOV'][row]
+        return(fantasyPts)
 
-        
-        
+    def check_if_injured(self, league_roster):
+        for player in self.roster:
+            if self.fptsatdate[player] == 'DNP':
+                pass
 
 if __name__ == "__main__":
     myTeamRoster = [
@@ -168,9 +172,17 @@ if __name__ == "__main__":
     today, yesterday, todayString, yesterdayString = get_dates()
     myTeam = Team(myTeamRoster, yesterdayString)
 
-    myTeam.printfn()
+    # myTeam.printfn()
     myTeam.print_results()
-    
+    # print(myTeam.roster)
+    # league_roster = {}
+    # teamlist = []
+    # for team in teams.get_teams():
+    #     teamlist.append(team['full_name'])
+    # for team in teamlist:
+    #     league_roster[team] = get_roster(teamName=team)
+    # print(league_roster)
+    print(get_gamelog(yesterdayString))
     
     # # Need to add 
     # myTeamGamelog = {}
