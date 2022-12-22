@@ -80,6 +80,7 @@ class Team():
             self.add_fantasy_row(df)
             self.av_fpoints[name] = self.average_fpoints(df)
         self.fantasy_points_by_date(date)
+        # self.check_if_injured(self)
             
     def printfn(self):
         for name, df in self.gamelog.items():
@@ -124,7 +125,7 @@ class Team():
         for name in myTeam.roster:
             today = self.fptsatdate[name]
             average = self.av_fpoints[name]
-            if today != 'DNP':
+            if today != 'DNP' and today != 'INJURED':
                 difference = today-average
                 difference = round(difference, 2)
                 total += today
@@ -146,10 +147,13 @@ class Team():
         fantasyPts = df['PTS'][row] + df['AST'][row]*1.5 + df['REB'][row]*1.2 + df['STL'][row]*2 + df['BLK'][row]*2 + df['FG3M'][row]*0.5 - df['TOV'][row]
         return(fantasyPts)
 
-    def check_if_injured(self, league_roster):
-        for player in self.roster:
-            if self.fptsatdate[player] == 'DNP':
-                pass
+    def check_if_injured(self):
+        gamelog = get_gamelog(yesterday)
+        for team in gamelog['TEAM_NAME']:
+            roster = get_roster(teamName = team)
+            for player in myroster:
+                if player in roster & self.fptsatdate[player] == 'DNP':
+                    self.fptsatdate[player] = 'INJURED'
 
 if __name__ == "__main__":
     myTeamRoster = [
@@ -174,6 +178,7 @@ if __name__ == "__main__":
 
     # myTeam.printfn()
     myTeam.print_results()
+    myroster = myTeam.roster
     # print(myTeam.roster)
     # league_roster = {}
     # teamlist = []
@@ -182,7 +187,7 @@ if __name__ == "__main__":
     # for team in teamlist:
     #     league_roster[team] = get_roster(teamName=team)
     # print(league_roster)
-    print(get_gamelog(yesterdayString))
+        
     
     # # Need to add 
     # myTeamGamelog = {}
