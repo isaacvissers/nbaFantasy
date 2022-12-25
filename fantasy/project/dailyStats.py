@@ -56,18 +56,6 @@ def get_roster(team_id='', teamName='', season='2022'):
         rosterDict[df["PLAYER"][i]] = df["PLAYER_ID"][i]
     return(rosterDict)
 
-def excel_write(df, filename, sheetname=''):
-    writer = pd.ExcelWriter(filename+'.xlsx', engine='xlsxwriter')
-    if sheetname != '':
-        df.to_excel(writer, sheet_name = sheetname)
-        writer.save()
-        writer.close()
-    else:
-        df.to_excel(writer)
-        writer.save()
-        writer.close()
- 
-
 
 class Team():
     def __init__(self, roster, date):
@@ -81,7 +69,7 @@ class Team():
             self.add_fantasy_row(df)
             self.av_fpoints[name] = self.average_fpoints(df)
         self.fantasy_points_by_date(date)
-        # self.check_if_injured()
+        self.check_if_injured()
             
     def printfn(self):
         for name, df in self.gamelog.items():
@@ -153,8 +141,9 @@ class Team():
         for team in gamelog['TEAM_ID']:
             rosterTeam = get_roster(team_id=team)
             for player in self.roster:
-                if player in rosterTeam & self.fptsatdate[player] == 'DNP':
-                    self.fptsatdate[player] = 'INJURED'
+                if player in rosterTeam.keys():
+                    if self.fptsatdate[player] == 'DNP':
+                        self.fptsatdate[player] = 'INJURED'
         return(self)
 
 if __name__ == "__main__":
@@ -176,55 +165,8 @@ if __name__ == "__main__":
     ]
     
     today, yesterday, todayString, yesterdayString = get_dates()
-    myTeam = Team(myTeamRoster, yesterdayString)
-
-    # myTeam.printfn()
+    myTeam = Team(myTeamRoster, 'DEC 23, 2022')
     myTeam.print_results()
     myroster = myTeam.roster
-    # print(myTeam.roster)
-    # league_roster = {}
-    # teamlist = []
-    # for team in teams.get_teams():
-    #     teamlist.append(team['full_name'])
-    # for team in teamlist:
-    #     league_roster[team] = get_roster(teamName=team)
-    # print(league_roster)
-        
     
-    # # Need to add 
-    # myTeamGamelog = {}
-    # for player in myTeam:
-    #     myTeamGamelog[player] = get_player_gamelog(player)
-    # print(myTeamGamelog)
-    
-    
-    
-    
-    
-    
-    # today, yesterday, todayString, yesterdayString = get_dates()
-    # todaysGames = get_gamelog(yesterday)
-    # print(todaysGames)
-    # for team_id in todaysGames["TEAM_ID"]:
-    #     roster = get_roster(team_id=team_id)
-    #     for name, playerid in roster.items():
-    #         print(name)
-    #         df = get_player_gamelog(name)
-    #         print(df)
-    #         add_fantasy_row(df)
-    #         print(df)
-    #         x = fantasy_points_by_date(df,yesterdayString)
-    #         print(x)
-    #         quit()
-            
-            
-            
-            
-            # yesterdayString = yesterday.strftime('%b').upper() + ' ' +  str(yesterday.day) + ', ' + str(yesterday.year)
-            # yesterdayStats = df[df["GAME_DATE"] == yesterdayString]
-            # # exit()
-            # if df["GAME_DATE"][0] == yesterdayString:
-            #     df1 = df[df['GAME_DATE'] == str(yesterdayString)]
-            #     print(calculate_fantasy_points(df1))
-            #     print(df1)
-            #     exit()
+    print()

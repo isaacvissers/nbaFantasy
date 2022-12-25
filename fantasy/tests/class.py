@@ -81,7 +81,7 @@ class Team():
             self.add_fantasy_row(df)
             self.av_fpoints[name] = self.average_fpoints(df)
         self.fantasy_points_by_date(date)
-        # self.check_if_injured()
+        self.check_if_injured()
             
     def printfn(self):
         for name, df in self.gamelog.items():
@@ -152,9 +152,11 @@ class Team():
         gamelog = get_gamelog(yesterday)
         for team in gamelog['TEAM_ID']:
             rosterTeam = get_roster(team_id=team)
+            print(rosterTeam)
             for player in self.roster:
-                if player in rosterTeam & self.fptsatdate[player] == 'DNP':
-                    self.fptsatdate[player] = 'INJURED'
+                if player in rosterTeam:
+                    if self.fptsatdate[player] == 'DNP':
+                        self.fptsatdate[player] = 'INJURED'
         return(self)
 
 if __name__ == "__main__":
@@ -177,10 +179,11 @@ if __name__ == "__main__":
     
     today, yesterday, todayString, yesterdayString = get_dates()
     myTeam = Team(myTeamRoster, yesterdayString)
-
-    # myTeam.printfn()
     myTeam.print_results()
     myroster = myTeam.roster
+    
+    print()
+    
     # print(myTeam.roster)
     # league_roster = {}
     # teamlist = []
