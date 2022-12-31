@@ -47,7 +47,7 @@ def get_gamelog(date, season='2022'):
 def get_roster(team_id='', teamName='', season='2022'):
     if team_id == '':
         team_id = get_team_id(teamName)
-    df = commonteamroster.CommonTeamRoster(season = season, team_id = team_id).get_data_frames()
+    df = commonteamroster.CommonTeamRoster(season=season, team_id=team_id).get_data_frames()
     df = df[0]
     rosterDict = {}
     for i in range(len(df)):

@@ -1,12 +1,13 @@
 from nba_api.stats.endpoints import leaguegamelog
 import pandas as pd
+import time
 
-def get_gamelog(date, season='2022'):
+def get_gamelog(dates, season='2022'):
     gamelog = leaguegamelog.LeagueGameLog(season=season)
     df = pd.DataFrame((gamelog.get_data_frames())[0])
     df.drop('SEASON_ID', axis=1, inplace=True)
     df.drop('VIDEO_AVAILABLE', axis=1, inplace=True)
-    dfdate = df[df["GAME_DATE"] == str(date)]
+    dfdate = df[df["GAME_DATE"] in dates]
     return(dfdate)
 
 def excel_write(df, filename, sheetname=''):
@@ -21,6 +22,18 @@ def excel_write(df, filename, sheetname=''):
         writer.close()
 
 if __name__ == '__main__':
-    date = '2022-12-30'
-    df = get_gamelog(date)
-    excel_write(df, "dailyGamelog", date)
+    weekDates = [
+        "2022-12-19",
+        "2022-12-20",
+        "2022-12-21",
+        "2022-12-22",
+        "2022-12-23",
+        "2022-12-24",
+        "2022-12-25"
+    ]
+    df = {}
+
+    df = get_gamelog(weekDates)
+    print(df)
+    # for i in range(7):
+    #     excel_write(df, "dailyGamelog", weekDates[i])
