@@ -58,9 +58,10 @@ def get_roster(team_id='', teamName='', season='2022'):
 
 
 class Team():
-    def __init__(self, roster, date):
+    def __init__(self, roster, strdate, date):
         self.roster = roster
         self.date = date
+        self.strdate = strdate
         self.gamelog = {}
         self.av_fpoints = {}
         for player in self.roster:
@@ -68,7 +69,7 @@ class Team():
         for name, df in self.gamelog.items():
             self.add_fantasy_row(df)
             self.av_fpoints[name] = self.average_fpoints(df)
-        self.fantasy_points_by_date(date)
+        self.fantasy_points_by_date()
         self.check_if_injured()
             
     def printfn(self):
@@ -90,10 +91,10 @@ class Team():
         df["FPTS"] = fpts
         return(df)
     
-    def fantasy_points_by_date(self, date):
+    def fantasy_points_by_date(self):
         self.fptsatdate = {}
         for name, df in self.gamelog.items():
-            dfDate = df[df['GAME_DATE'] == date]
+            dfDate = df[df['GAME_DATE'] == self.strdate]
             if 'FPTS' in dfDate:
                 try:
                     x = (float(dfDate['FPTS']))
@@ -137,7 +138,7 @@ class Team():
         return(fantasyPts)
 
     def check_if_injured(self):
-        gamelog = get_gamelog(yesterday)
+        gamelog = get_gamelog(self.date)
         for team in gamelog['TEAM_ID']:
             rosterTeam = get_roster(team_id=team)
             for player in self.roster:
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     ]
     
     today, yesterday, todayString, yesterdayString = get_dates()
-    myTeam = Team(myTeamRoster, 'DEC 23, 2022')
+    myTeam = Team(myTeamRoster, 'DEC 27, 2022', '2022-12-27')
     myTeam.print_results()
     myroster = myTeam.roster
     
