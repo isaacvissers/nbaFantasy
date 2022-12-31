@@ -21,7 +21,6 @@ def excel_write(df, filename, sheetname=''):
         writer.close()
 
 if __name__ == '__main__':
-    date = '2022-12-27'
-    date = 'DEC. 27, 2022'
+    date = '2022-12-30'
     df = get_gamelog(date)
     excel_write(df, "dailyGamelog", date)

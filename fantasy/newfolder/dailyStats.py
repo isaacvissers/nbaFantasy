@@ -39,12 +39,10 @@ def get_dates():
     return(today, yesterday, todayString, yesterdayString)
 
 def get_gamelog(date, season='2022'):
-    gamelog = leaguegamelog.LeagueGameLog(season=season)
-    df = pd.DataFrame((gamelog.get_data_frames())[0])
-    df.drop('SEASON_ID', axis=1, inplace=True)
-    df.drop('VIDEO_AVAILABLE', axis=1, inplace=True)
-    dfdate = df[df["GAME_DATE"] == str(date)]
-    return(dfdate)
+    df = pd.read_excel('dailyGamelog.xlsx', sheet_name=date)
+    # gamelog = leaguegamelog.LeagueGameLog(season=season)
+    # df = pd.DataFrame((gamelog.get_data_frames())[0])
+    return(df)
 
 def get_roster(team_id='', teamName='', season='2022'):
     if team_id == '':
@@ -71,13 +69,6 @@ class Team():
             self.av_fpoints[name] = self.average_fpoints(df)
         self.fantasy_points_by_date()
         self.check_if_injured()
-            
-    def printfn(self):
-        for name, df in self.gamelog.items():
-            print(name)
-            print(df)
-        print(self.av_fpoints)
-        print(self.fptsatdate)
             
     def average_fpoints(self, df):
         fpoints = sum(df['FPTS']) / len(df)
@@ -166,7 +157,7 @@ if __name__ == "__main__":
     ]
     
     today, yesterday, todayString, yesterdayString = get_dates()
-    myTeam = Team(myTeamRoster, 'DEC 27, 2022', '2022-12-27')
+    myTeam = Team(myTeamRoster, 'DEC 30, 2022', '2022-12-30')
     myTeam.print_results()
     myroster = myTeam.roster
     
