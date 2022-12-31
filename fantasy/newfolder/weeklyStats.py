@@ -1,5 +1,4 @@
 from dailyStats import *
-from gamesByDate import *
 
 if __name__ == "__main__":
     weekString = [
@@ -36,16 +35,13 @@ if __name__ == "__main__":
         'Jakob Poeltl',
         'RJ Barrett'
     ]
-    weeklyStats = {}
+    weeklyStats = []
     for i in range(7):
-        df = get_gamelog(weekDates[i])
-        excel_write(df, "dailyGamelog", weekDates[i])
-        weeklyStats[weekString[i]] = Team(myTeamRoster, weekString[i], weekDates[i])
-        weeklyStats[weekString[i]].print_results()
+        x = Team(myTeamRoster, weekString[i], weekDates[i])
+        print(x)
+        # weeklyStats[weekString[i]].print_results()
         
     # today, yesterday, todayString, yesterdayString = get_dates()
     # myTeam = Team(myTeamRoster, 'DEC 30, 2022', '2022-12-30')
     # myTeam.print_results()
     # myroster = myTeam.roster
-    
-    # print()

@@ -1,25 +1,22 @@
 from nba_api.stats.endpoints import leaguegamelog
 import pandas as pd
-import time
 
-def get_gamelog(dates, season='2022'):
+def get_gamelog(date, season='2022'):
     gamelog = leaguegamelog.LeagueGameLog(season=season)
     df = pd.DataFrame((gamelog.get_data_frames())[0])
     df.drop('SEASON_ID', axis=1, inplace=True)
     df.drop('VIDEO_AVAILABLE', axis=1, inplace=True)
-    dfdate = df[df["GAME_DATE"] in dates]
+    dfdate = df[df["GAME_DATE"] == date]
     return(dfdate)
 
-def excel_write(df, filename, sheetname=''):
-    writer = pd.ExcelWriter(filename+'.xlsx', engine='xlsxwriter')
+def excel_write(writer, df, sheetname=''):
+
     if sheetname != '':
         df.to_excel(writer, sheet_name=sheetname)
-        writer.save()
-        writer.close()
+
     else:
         df.to_excel(writer)
-        writer.save()
-        writer.close()
+
 
 if __name__ == '__main__':
     weekDates = [
@@ -32,8 +29,10 @@ if __name__ == '__main__':
         "2022-12-25"
     ]
     df = {}
-
-    df = get_gamelog(weekDates)
-    print(df)
-    # for i in range(7):
-    #     excel_write(df, "dailyGamelog", weekDates[i])
+    writer = pd.ExcelWriter('dailyGamelog.xlsx', engine='xlsxwriter')
+    
+    for i in range(7):
+        df = get_gamelog(weekDates[i])
+        print(df)
+        excel_write(writer, df, weekDates[i])
+    writer.save()
