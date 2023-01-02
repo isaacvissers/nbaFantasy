@@ -1,5 +1,6 @@
 from nba_api.stats.endpoints import leaguegamelog
 import pandas as pd
+import datetime
 
 def get_gamelog(date, season='2022'):
     gamelog = leaguegamelog.LeagueGameLog(season=season)
@@ -18,6 +19,17 @@ def excel_write(writer, df, sheetname=''):
         df.to_excel(writer)
 
 
+def get_week():
+    startDate = datetime.datetime.today()
+    while startDate.weekday() != 6:
+        startDate = startDate - datetime.timedelta(1)
+    week = []
+    for i in range(7):
+        day = startDate + datetime.timedelta(i)
+        dayf = day.strftime('%Y-%m-%d')
+        week.append(dayf)
+    return(week)
+
 if __name__ == '__main__':
     weekDates = [
         "2022-12-19",
@@ -28,6 +40,7 @@ if __name__ == '__main__':
         "2022-12-24",
         "2022-12-25"
     ]
+    week = get_week() # will return the fantasy week that includes the current day
     df = {}
     writer = pd.ExcelWriter('dailyGamelog.xlsx', engine='xlsxwriter')
     

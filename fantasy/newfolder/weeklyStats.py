@@ -39,6 +39,13 @@ if __name__ == "__main__":
     for i in range(7):
         x = Team(myTeamRoster, weekString[i], weekDates[i])
         print(x)
+        
+        
+    # if dataframe isn't empty we can iterate over sheetnames to calculate fantasy points
+    
+    # for days when dataframe is empty we need to call a separate function to read schedule
+        
+        
         # weeklyStats[weekString[i]].print_results()
         
     # today, yesterday, todayString, yesterdayString = get_dates()
