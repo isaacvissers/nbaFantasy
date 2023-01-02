@@ -4,3 +4,5 @@ Next steps:
 
     print week results together
         will require creating a new class week which will contain 7 Team classes
+
+    be able to obtain future schedule

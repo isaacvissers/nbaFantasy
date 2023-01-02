@@ -11,13 +11,10 @@ def get_gamelog(date, season='2022'):
     return(dfdate)
 
 def excel_write(writer, df, sheetname=''):
-
     if sheetname != '':
         df.to_excel(writer, sheet_name=sheetname)
-
     else:
         df.to_excel(writer)
-
 
 def get_week():
     startDate = datetime.datetime.today()
