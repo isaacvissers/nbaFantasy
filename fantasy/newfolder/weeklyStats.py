@@ -1,7 +1,7 @@
 from dailyStats import *
 
 if __name__ == "__main__":
-    weekString = [
+    weekString = [ # will need to find a way to get these strings
         "DEC 19, 2022",
         "DEC 20, 2022",
         "DEC 21, 2022",
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     weeklyStats = []
     for i in range(7):
         x = Team(myTeamRoster, weekString[i], weekDates[i])
-        print(x)
+        x.print_results()
         
         
     # if dataframe isn't empty we can iterate over sheetnames to calculate fantasy points

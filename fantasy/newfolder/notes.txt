@@ -1,0 +1,6 @@
+Next steps:
+
+    create one script which makes all calls for dailyGamelogs and player game logs to improve runtime
+
+    print week results together
+        will require creating a new class week which will contain 7 Team classes

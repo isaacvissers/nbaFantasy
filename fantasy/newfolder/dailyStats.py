@@ -100,10 +100,11 @@ class Team():
     def print_results(self):
         """Prints teams results for today compared with the expected(average)"""
         print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('NAME', 'TODAY', 'AVEREAGE', 'DIFFERENCE'))
+        print('-'*65)
         total = 0
         totalav = 0
         totaldiff = 0
-        for name in myTeam.roster:
+        for name in self.roster:
             today = self.fptsatdate[name]
             average = self.av_fpoints[name]
             if today != 'DNP' and today != 'INJURED':
@@ -122,7 +123,11 @@ class Team():
         totaldiff = round(totaldiff,2)
         if totaldiff > 0:
                     totaldiff = '+' + str(totaldiff)
+        print('-'*65)
         print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('TOTALS', total, totalav, totaldiff))
+        print('-'*65)
+        print()
+        print()
         
     def calculate_fantasy_points(self, df, row=0):
         fantasyPts = df['PTS'][row] + df['AST'][row]*1.5 + df['REB'][row]*1.2 + df['STL'][row]*2 + df['BLK'][row]*2 + df['FG3M'][row]*0.5 - df['TOV'][row]
@@ -157,7 +162,7 @@ if __name__ == "__main__":
     ]
     
     today, yesterday, todayString, yesterdayString = get_dates()
-    myTeam = Team(myTeamRoster, 'DEC 30, 2022', '2022-12-30')
+    myTeam = Team(myTeamRoster, 'DEC 19, 2022', '2022-12-19')
     myTeam.print_results()
     myroster = myTeam.roster
     
