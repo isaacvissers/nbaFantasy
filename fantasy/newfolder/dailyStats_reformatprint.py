@@ -144,6 +144,13 @@ class Team():
                     if self.fptsatdate[player] == 'DNP':
                         self.fptsatdate[player] = 'INJURED'
         return(self)
+    
+class Week():
+    def __init__(self, roster, dates, stringDates):
+        days = {}
+        for i in range(7):
+            days[stringDates[i]] = Team(roster, stringDates[i], dates[i])
+        
 
 if __name__ == "__main__":
     myTeamRoster = [
