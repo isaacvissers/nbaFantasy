@@ -69,8 +69,6 @@ class Team():
             self.av_fpoints[name] = self.average_fpoints(df)
         self.fantasy_points_by_date()
         self.check_if_injured()
-        print(self.av_fpoints)
-        print(self.fptsatdate)
             
     def average_fpoints(self, df):
         fpoints = sum(df['FPTS']) / len(df)
@@ -147,9 +145,51 @@ class Team():
     
 class Week():
     def __init__(self, roster, dates, stringDates):
-        days = {}
+        self.days = {}
+        self.strDates = stringDates
+        self.roster = roster
         for i in range(7):
-            days[stringDates[i]] = Team(roster, stringDates[i], dates[i])
+            self.days[stringDates[i]] = Team(roster, stringDates[i], dates[i])
+            
+    def print_results(self):
+        """Prints teams results for today compared with the expected(average)"""
+        print('{0:^20}|{1:^15}|{2:^15}|{3:^15}|{4:^15}|{5:^15}|{6:^15}|{7:^15}|{8:^15}|{9:^15}'.format('NAME', 'AVEREAGE', self.strDates[0], self.strDates[1], self.strDates[2], self.strDates[3], self.strDates[4], self.strDates[5], self.strDates[6], 'DIFFERENCE'))
+        print('-'*155)
+        dailyTotal = {}
+        for day in self.strDates:
+            dailyTotal[day] = 0
+        for name in self.roster:
+            print('{0:20}'.format(name), end='|')
+            for day in self.strDates:
+                print('{15:0}'.format(self.days[day].fptsatdate[name]), end='|')
+                print()
+                dailyTotal[day] += self.days[day].fptsatdate[name]
+            
+            
+        # for name in self.roster:
+        #     today = self.fptsatdate[name]
+        #     average = self.av_fpoints[name]
+        #     if today != 'DNP' and today != 'INJURED':
+        #         difference = today-average
+        #         difference = round(difference, 2)
+        #         total += today
+        #         totalav += average
+        #         totaldiff += difference
+        #         if difference > 0:
+        #             difference = '+' + str(difference)
+        #     else:
+        #         difference = '-'
+        #     print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format(name, today, average, difference))
+        # total = round(total,1)
+        # totalav = round(totalav,2)
+        # totaldiff = round(totaldiff,2)
+        # if totaldiff > 0:
+        #             totaldiff = '+' + str(totaldiff)
+        # print('-'*65)
+        # print('{0:^20}|{1:^15}|{2:^15}|{3:^15}'.format('TOTALS', total, totalav, totaldiff))
+        # print('-'*65)
+        # print()
+        # print()
         
 
 if __name__ == "__main__":
@@ -169,8 +209,24 @@ if __name__ == "__main__":
         'Jakob Poeltl',
         'RJ Barrett'
     ]
+    weekString = [ # will need to find a way to get these strings
+        "DEC 19, 2022",
+        "DEC 20, 2022",
+        "DEC 21, 2022",
+        "DEC 22, 2022",
+        "DEC 23, 2022",
+        "DEC 24, 2022",
+        "DEC 25, 2022"
+    ]
+    weekDates = [
+        "2022-12-19",
+        "2022-12-20",
+        "2022-12-21",
+        "2022-12-22",
+        "2022-12-23",
+        "2022-12-24",
+        "2022-12-25"
+    ]
     
-    today, yesterday, todayString, yesterdayString = get_dates()
-    myTeam = Team(myTeamRoster, 'DEC 19, 2022', '2022-12-19')
-    myTeam.print_results()
-    myroster = myTeam.roster
+    week = Week(myTeamRoster, weekDates, weekString)
+    week.print_results()
