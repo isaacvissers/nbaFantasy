@@ -38,7 +38,6 @@ if __name__ == '__main__':
         "2022-12-25"
     ]
     week = get_week() # will return the fantasy week that includes the current day
-    df = {}
     writer = pd.ExcelWriter('dailyGamelog.xlsx', engine='xlsxwriter')
     
     for i in range(7):
